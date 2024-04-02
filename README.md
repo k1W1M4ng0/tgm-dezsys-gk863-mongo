@@ -1,8 +1,11 @@
-# "*TEMPLATE*"
+# SYT Dezentrale Systeme GK863 Document Oriented Middleware using MongoDB
 
-## Aufgabenstellung
-Die detaillierte [Aufgabenstellung](TASK.md) beschreibt die notwendigen Schritte zur Realisierung.
+## Task description
 
-## Implementierung
+The task description: [Task description](./TASK.md)
 
-## Quellen
+## Questions
+
+## Implementation
+
+## Sources
