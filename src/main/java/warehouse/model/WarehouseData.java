@@ -1,9 +1,7 @@
 package warehouse.model;
 
-import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
-
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
@@ -13,7 +11,7 @@ public class WarehouseData {
     private String warehouseApplicationID;
 
     @Id
-	private Integer warehouseID;
+	private String warehouseID;
 	private String warehouseName;
 	private String warehouseAddress;
 	private String warehousePostalCode;
@@ -21,7 +19,7 @@ public class WarehouseData {
 	private String warehouseCountry;
 	private String timestamp;
 
-    @DocumentReference
+    // @DocumentReference
 	private ArrayList<Product> productData;
 
 	/**
@@ -29,13 +27,13 @@ public class WarehouseData {
 	 */
 	public WarehouseData() {
 		this.productData = new ArrayList<>();
-		this.timestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date());
+		this.timestamp = LocalDateTime.now().toString();
 	}
 	
 	/**
 	 * Setter and Getter Methods
 	 */
-	public Integer getWarehouseID() {
+	public String getWarehouseID() {
 		return warehouseID;
 	}
 
@@ -51,7 +49,7 @@ public class WarehouseData {
         this.productData = productData;
     }
 
-    public void setWarehouseID(Integer warehouseID) {
+    public void setWarehouseID(String warehouseID) {
 		this.warehouseID = warehouseID;
 	}
 
@@ -119,14 +117,6 @@ public class WarehouseData {
 		this.warehouseCountry = warehouseCountry;
 	}
 
-	public String getTimestamp() {
-		return timestamp;
-	}
-
-	public void setTimestamp(String timestamp) {
-		this.timestamp = timestamp;
-	}
-	
 	public void addProduct(Product p) {
 		this.productData.add(p);
 	}
@@ -143,7 +133,15 @@ public class WarehouseData {
 	 */
 	@Override
 	public String toString() {
-		String info = String.format("Warehouse Info: ID = %s, timestamp = %s", warehouseID, timestamp );
+		String info = String.format("Warehouse Info: ID = %s, timestamp = %s", warehouseID, timestamp.toString() );
 		return info;
 	}
+
+    public String getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
+    }
 }

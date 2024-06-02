@@ -1,7 +1,6 @@
 package warehouse.model;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
 public class Product {
     @Id
@@ -11,18 +10,8 @@ public class Product {
     private int productQuantity;
     private String productUnit;
 
-    @DocumentReference(lazy = true)
-    private WarehouseData warehouseData;
     
     // setters and getters
-
-    public WarehouseData getWarehouseData() {
-        return warehouseData;
-    }
-
-    public void setWarehouseData(WarehouseData warehouseData) {
-        this.warehouseData = warehouseData;
-    }
 
     /**
      * @return the productID
@@ -96,10 +85,6 @@ public class Product {
 
     @Override
     public String toString() {
-        String out = String.format(
-            "a"
-            
-        );
-        return out;
+        return String.format("Product Info: ID = %d", this.productID);
     }
 }
