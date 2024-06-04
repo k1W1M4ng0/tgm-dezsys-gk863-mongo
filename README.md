@@ -55,11 +55,91 @@ In verteilten Systemen ist es unmöglich, Consistency, Availability und Partitio
 
 ### Mit welchem Befehl koennen Sie den Lagerstand eines Produktes aller Lagerstandorte anzeigen.
 
+```
 
+db.warehouseData.aggregate([
+    {
+        $match: {
+            'productData._id': 12345
+        }
+    },
+    {
+        $project: {
+            sum: {$sum: '$productData.productQuantity'}
+        }
+    }
+])
+
+output: 
+
+[
+  { _id: '1', sum: 174 },
+  { _id: '2', sum: 184 },
+  { _id: '3', sum: 176 },
+  { _id: '4', sum: 142 },
+  { _id: '5', sum: 225 },
+  { _id: '6', sum: 227 },
+  { _id: '8083', sum: 142 },
+  { _id: '8084', sum: 209 },
+  { _id: '8085', sum: 277 },
+  { _id: '8086', sum: 179 }
+]
+```
+
+Das Problem hier ist, dass ich mit aggregate alle Warehouses gefunden habe, und dort dann die Summe von allem angezeigt.
+Diese Frage könnte leicht gelöst werden, wenn Produkte nicht je in einem Array zu einem Warehouse, sondern in einer eigenen
+Datenbank gespeichert werden.
 
 ### Mit welchem Befehl koennen Sie den Lagerstand eines Produktes eines bestimmten Lagerstandortes anzeigen.
 
+```
+db.warehouseData.find({
+    _id: '1',
+    'productData._id': 12345,
+})
 
+
+output:
+
+[
+  {
+    _id: '1',
+    warehouseApplicationID: 'warehouse8081',
+    warehouseName: 'Klagenfurt Flughafen',
+    warehouseAddress: 'Flughafenstraße 20/7',
+    warehousePostalCode: 'Klagenfurt',
+    warehouseCity: 'Klagenfurt',
+    warehouseCountry: 'Austria',
+    timestamp: '2024-06-02 15:47:52.672',
+    productData: [
+      {
+        _id: 2832,
+        productName: 'Turbo Laptop Platinum',
+        productCategory: 'Verbrauchsgut',
+        productQuantity: 62,
+        productUnit: 'mol'
+      },
+      {
+        _id: 5291,
+        productName: 'Super Apfel Platinum',
+        productCategory: 'Verbrauchsgut',
+        productQuantity: 12,
+        productUnit: 's'
+      },
+      {
+        _id: 12345,
+        productName: 'Gourmet Coffee',
+        productCategory: 'Food & Beverages',
+        productQuantity: 100,
+        productUnit: 'kg'
+      }
+    ],
+    _class: 'warehouse.model.WarehouseData'
+  }
+]
+```
+
+Hier ist wieder das Problem, dass man das Produkt nicht isolieren kann, sondern nur das ganze WarehouseData anzeigen kann. 
 
 
 ## Implementation
@@ -137,7 +217,6 @@ public interface WarehouseRepository extends MongoRepository<WarehouseData, Stri
 The main application has an autowired WarehouseRepository: 
 
 ```java
-
 	@Autowired
 	private WarehouseRepository repository;
 ```
@@ -145,6 +224,10 @@ The main application has an autowired WarehouseRepository:
 Every 5 seconds, 4 products are saved:
 
 ```java
+
+        Integer port = 8081;
+        port = Integer.parseInt(args[1]);
+
         while(true) {
             for(int i = 1; i < 5; ++i) {
 
